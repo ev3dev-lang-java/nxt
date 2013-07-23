@@ -390,8 +390,8 @@ def main():
     rospy.init_node('nxt_ros')
     ns = 'nxt_robot'
     host = rospy.get_param("~host", None)
-    sock = nxt.locator.find_one_brick(host)
-    b = sock.connect()
+    b = nxt.locator.find_one_brick(host)
+    #b = sock.connect()
 
     config = rospy.get_param("~"+ns)
     components = []
