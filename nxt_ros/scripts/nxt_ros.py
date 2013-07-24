@@ -40,7 +40,7 @@ import math
 import time
 from nxt.motor import PORT_A, PORT_B, PORT_C
 from nxt.sensor import PORT_1, PORT_2, PORT_3, PORT_4
-from nxt.sensor import Type
+from nxt.sensor import * #Type
 import nxt.sensor 
 import nxt.motor 
 import thread
@@ -187,7 +187,7 @@ class TouchSensor(Device):
     def __init__(self, params, comm):
         Device.__init__(self, params)
         # create touch sensor
-        self.touch = nxt.sensor.TouchSensor(comm, eval(params['port']))
+        self.touch = nxt.sensor.Touch(comm, eval(params['port']))
         self.frame_id = params['frame_id']
 
         # create publisher
@@ -206,7 +206,7 @@ class UltraSonicSensor(Device):
     def __init__(self, params, comm):
         Device.__init__(self, params)
         # create ultrasonic sensor
-        self.ultrasonic = nxt.sensor.UltrasonicSensor(comm, eval(params['port']))
+        self.ultrasonic = nxt.sensor.Ultrasonic(comm, eval(params['port']))
         self.frame_id = params['frame_id']
         self.spread = params['spread_angle']
         self.min_range = params['min_range']
@@ -230,7 +230,7 @@ class GyroSensor(Device):
     def __init__(self, params, comm):
         Device.__init__(self, params)
         #create gyro sensor
-        self.gyro = nxt.sensor.GyroSensor(comm, eval(params['port']))
+        self.gyro = nxt.sensor.Gyro(comm, eval(params['port']))
         self.frame_id = params['frame_id']
         self.orientation = 0.0
         self.offset = 0.0
@@ -288,7 +288,7 @@ class AccelerometerSensor(Device):
     def __init__(self, params, comm):
         Device.__init__(self, params)
         #create gyro sensor
-        self.accel = nxt.sensor.AccelerometerSensor(comm, eval(params['port']))
+        self.accel = nxt.sensor.Accelerometer(comm, eval(params['port']))
         self.frame_id = params['frame_id']
 
         # create publisher
@@ -309,7 +309,7 @@ class ColorSensor(Device):
     def __init__(self, params, comm):
         Device.__init__(self, params)
         # create color sensor
-        self.color = nxt.sensor.ColorSensor(comm, eval(params['port']))
+        self.color = nxt.sensor.Color(comm, eval(params['port']))
         self.frame_id = params['frame_id']
 
         # create publisher
@@ -354,7 +354,9 @@ class IntensitySensor(Device):
     def __init__(self, params, comm):
         Device.__init__(self, params)
         # create intensity sensor
-        self.intensity = nxt.sensor.ColorSensor(comm, eval(params['port']))
+        self.comm = comm
+        self.params = params
+        #self.intensity = nxt.sensor.Light(comm, eval(params['port']))
         self.frame_id = params['frame_id']
         self.color_r = params['color_r']
         self.color_g = params['color_g']
@@ -381,7 +383,7 @@ class IntensitySensor(Device):
         co.r = self.color_r
         co.g = self.color_g
         co.b = self.color_b
-        co.intensity = self.intensity.get_reflected_light(self.color)
+        co.intensity = nxt.sensor.Light(self.comm, eval(self.params['port'])).get_sample()
         self.pub.publish(co)
 
 
